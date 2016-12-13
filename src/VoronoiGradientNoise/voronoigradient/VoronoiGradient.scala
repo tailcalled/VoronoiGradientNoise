@@ -88,16 +88,16 @@ object VoronoiGradient {
         val t = pts.minBy { x => (v - x).norm2 }
         if (inner.contains(t)) {
           val poly = tiles(t)
-          val parts = poly.inits.toVector zip poly.tails.toVector.reverse
-          val (sum, weight) = parts.drop(1).map { case (begin, end) =>
+          val parts = poly.inits.toVector.init zip poly.tails.toVector.init.reverse
+          val (sum, weight) = parts.map { case (begin, end) =>
             val us = end.head
-            val them = end.tail ++ begin
-            val edges = them zip (them.tail :+ them.head)
+            val them = end.tail ++ begin.init
+            val edges = them zip them.tail
             val weight = edges.map { case (v0, v1) => (v0 - v) cp (v1 - v) }.product
             val displace = (v - us) * gradient(us)
             (displace * weight, weight)
           }.reduce[(Double, Double)] { case ((a0, b0), (a1, b1)) => (a0 + a1, b0 + b1) }
-          val q = sum / weight
+          val q = sum / weight * 2
           val c = ((q + 0.5) * 256).toInt max 0 min 255
           val col = (0xFF << 24) | (c << 16) | (c << 8) | c
           img.setRGB(xP, yP, col)

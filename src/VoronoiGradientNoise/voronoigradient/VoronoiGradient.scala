@@ -49,7 +49,7 @@ object VoronoiGradient {
     }
     for (i <- 0 until 8) {
       val (inner, outer, tiles) = step()
-      val sz = 256
+      val sz = 64
       val img = new BufferedImage(sz, sz, BufferedImage.TYPE_INT_ARGB)
       for (xP <- 0 until sz) {
         for (yP <- 0 until sz) {
@@ -93,8 +93,8 @@ object VoronoiGradient {
             val us = end.head
             val them = end.tail ++ begin
             val edges = them zip (them.tail :+ them.head)
-            val weight = edges.map { case (v0, v1) => (v - v0) cp (v - v1) }.product
-            val displace = v * gradient(us)
+            val weight = edges.map { case (v0, v1) => (v0 - v) cp (v1 - v) }.product
+            val displace = (v - us) * gradient(us)
             (displace * weight, weight)
           }.reduce[(Double, Double)] { case ((a0, b0), (a1, b1)) => (a0 + a1, b0 + b1) }
           val q = sum / weight

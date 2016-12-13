@@ -66,3 +66,8 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+.cache-main
+*.classpath
+.project
+*.prefs
+*.png
